@@ -19,6 +19,8 @@ struct shared_memory
   
 struct shared_memory *shared;
 
+//消费者线程函数
+
 void *consumer(void *param) {
 	pthread_mutex_lock(&mutex);
 
@@ -56,6 +58,8 @@ int main(int argc, char *argv[]) {
 		if(permit) {
 			shared -> content = 0;
 
+			//三个线程
+			
 			pthread_t consumer_1;
 			pthread_t consumer_2;
 			pthread_t consumer_3;
