@@ -8,7 +8,7 @@
 
 pthread_mutex_t mutex;
 pthread_cond_t cond_var;
-
+//共享内存结构体
 struct shared_memory
 {
 	int content; 
@@ -18,7 +18,7 @@ struct shared_memory
 };
 
 struct shared_memory *shared;
-
+//线程函数
 void *producer(void *param) {
 	pthread_mutex_lock(&mutex);
 
@@ -58,7 +58,9 @@ int main(int argc, char *argv[]) {
 		permit = shared -> content;
 		if(permit) {
 			shared -> read = 0;
-
+			
+			//三个线程
+			
 			pthread_t producer_1;
 			pthread_t producer_2;
 			pthread_t producer_3;
