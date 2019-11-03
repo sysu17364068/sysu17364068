@@ -6,9 +6,10 @@
 pthread_mutex_t mutex;
 pthread_cond_t cond_var;
 
+//初始化哲学家结构体
 typedef struct Philosopher {
 	int num;
-	int condition;    	//为0时表示正在思考，为1时表示正在吃饭
+	int condition;  //为0时表示正在思考，为1时表示正在吃饭
 	int chop_z;	//为0时表示未被使用，为1时表示正在使用
 	int chop_y;
 	struct Philosopher* left_ph;
@@ -18,6 +19,7 @@ typedef struct Philosopher {
 
 Phil* first = NULL;
 
+//哲学家开始吃饭
 void pickup_forks(Phil* ph) {
 	pthread_mutex_lock(&mutex);
 	if(ph->chop_z==0 && ph->chop_y==0) {
@@ -36,6 +38,7 @@ void pickup_forks(Phil* ph) {
 	pthread_mutex_unlock(&mutex);
 }
 
+//哲学家停止吃饭
 void return_forks(Phil* ph) {
 	int thinking = 0;
 	thinking = rand() % 5 + 1;
@@ -62,6 +65,7 @@ void* behave(void *arg) {
 }
 
 int main(void) {
+	//初始化结构体
 	pthread_mutex_init(&mutex, NULL);
 	pthread_cond_init(&cond_var, NULL);
 
@@ -92,15 +96,17 @@ int main(void) {
 	first -> left_ph = tail;
 
 	ph = first;
+	
+	//启动多线程
 	for(int j=0; j<5; j++) {
 		pthread_create(&(ph->act), NULL, behave, (void*)ph);
 		ph = ph -> right_ph;
 	}
 
-	Phil* ph2 = first;
+	Phil* pher = first;
 	for(int i=0; i<5; i++) {
-		pthread_join(ph2->act, NULL);
-		ph2 = ph2 -> right_ph;
+		pthread_join(pher->act, NULL);
+		pher = pher -> right_ph;
 	}
 	return 0;
 }
